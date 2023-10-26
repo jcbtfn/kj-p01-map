@@ -2,16 +2,17 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>Primer ejercicio</title>
+        <title>Cities exercise</title>
         <link rel="stylesheet" href="css/style.css">
         <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-        <script type="module" src="js/map.js"></script>
     </head>
     <body>
         <main>
     
-            <section>
-                <h3>Cities exercise</h3>
+            <h3>CITIES</h3>
+
+            <section id="map-container">
+                
                 <!--The div element for the map -->
                 <div id="map"></div>
     
@@ -52,11 +53,60 @@
     
             <section id="textinfo">
                 <div id="cities-list">
-                    <p>Aquí va la lista de ciudades</p>
+                    <ul class="cities-list">Loading cities...</ul>
                 </div>
                 <div id="cities-info">
-                    <p>Aquí el cuadro de información. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tincidunt tortor aliquam nulla facilisi cras. Bibendum at varius vel pharetra vel. Eleifend mi in nulla posuere sollicitudin aliquam ultrices. Quisque non tellus orci ac. Ornare aenean euismod elementum nisi quis eleifend. Nunc sed augue lacus viverra. Consectetur adipiscing elit ut aliquam. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Quam id leo in vitae. Nisi vitae suscipit tellus mauris a diam maecenas. Nibh sit amet commodo nulla facilisi nullam vehicula ipsum. Nam aliquam sem et tortor. Mauris rhoncus aenean vel elit scelerisque mauris. At lectus urna duis convallis. Sit amet est placerat in egestas erat imperdiet sed euismod. Donec ultrices tincidunt arcu non. Amet mattis vulputate enim nulla aliquet porttitor lacus. Vel facilisis volutpat est velit egestas dui id ornare arcu.</p>
+                    <ul class="cities-info">Cities info</ul>
                 </div>
+                <script>
+
+                    const citiesList = document.querySelector('.cities-list');
+                    const endpoint = 'https://gist.githubusercontent.com/jcbtfn/688cb35c398469b682168b5bd2513007/raw/61b087a27d8030ba78fdb615fdff04b42d69ee12/testcities.json';
+
+                    console.log(endpoint);
+                    
+                    const cities = [];
+
+                    fetch(endpoint)
+                        .then(response => {return response.json()})
+                        .then(data => cities.push(...data))
+                        .then(showCities)
+                        //.then(showInfo)
+
+                    function showCities() {
+
+                        const html = cities.map(place => {
+                        return `
+                                <li>
+                                    <span class="name">${place.name}</span>
+                                </li>
+                                `;
+                        }).join('');
+
+                        citieslist.innerHTML = html;
+
+                        const city = document.querySelector('.name');
+                        city.addEventListener("click", showInfo("Arrecife"));
+                        console.log(city);
+
+                    };
+
+                    function showInfo(cityname) {
+                        
+                        console.log("hello");
+                        console.log(cityname);
+                        citiesinfo.innerHTML = `
+                                <li>
+                                    <span>Esto es una prueba con la ciudad de ${cityname}</span>
+                                </li>
+                                `;
+                                
+                    };      
+                    
+                    const citieslist = document.querySelector('.cities-list');
+                    const citiesinfo = document.querySelector('.cities-info');
+
+                </script>
             </section>
     
         </main>
