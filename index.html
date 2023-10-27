@@ -23,9 +23,13 @@
                     // Initialize and add the map
                     let map;
 
-                    async function initMap() {
+                    async function initMap(position) {
                     // The location
-                        const position = { lat: 28.482921928694683, lng: -16.322237460149434 };
+                        //const position = { lat: 28.482921928694683, lng: -16.322237460149434 };
+                        if (position === undefined) {
+                            position = { lat: 28.482921928694683, lng: -16.322237460149434 };
+                        }
+                        //const position = position2;
                         // Request needed libraries.
                         //@ts-ignore
                         const { Map } = await google.maps.importLibrary("maps");
@@ -86,7 +90,6 @@
                         citieslist.innerHTML = html;
 
                         const allCitiesList = document.querySelectorAll('.name');
-                        console.log(allCitiesList);
                         allCitiesList.forEach(cityInTheList => {
                             cityInTheList.addEventListener('click', showInfo);
                         });
@@ -96,7 +99,6 @@
                     function showInfo(e) {
                         
                         const cityToShow = cities.find(cityInArray => cityInArray.name === e.target.textContent);
-                        console.log(cityToShow);
                         citiesinfo.innerHTML = `
                                 <li>
                                     <span>Name: ${cityToShow.name}</span>
@@ -112,11 +114,9 @@
                                 </li>
                                 `;
 
-                        const position = { lat: cityToShow.lat, lng: cityToShow.lng };
+                        const position = new google.maps.LatLng(cityToShow.lat, cityToShow.lng);
+                        initMap(position);
 
-
-
-                        console.log(position);
                     };      
                     
                     const citieslist = document.querySelector('.cities-list');
