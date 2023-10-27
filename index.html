@@ -24,26 +24,27 @@
                     let map;
 
                     async function initMap() {
-                    // The location of Uluru
-                    const position = { lat: 28.482921928694683, lng: -16.322237460149434 };
-                    // Request needed libraries.
-                    //@ts-ignore
-                    const { Map } = await google.maps.importLibrary("maps");
-                    const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
+                    // The location
+                        const position = { lat: 28.482921928694683, lng: -16.322237460149434 };
+                        // Request needed libraries.
+                        //@ts-ignore
+                        const { Map } = await google.maps.importLibrary("maps");
+                        const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
 
-                    // The map, centered at Uluru
-                    map = new Map(document.getElementById("map"), {
-                        zoom: 17,
-                        center: position,
-                        mapId: "DEMO_MAP_ID",
-                    });
+                        // The map, centered at ETSII
+                        map = new Map(document.getElementById("map"), {
+                            zoom: 17,
+                            center: position,
+                            mapId: "DEMO_MAP_ID",
+                        });
 
-                    // The marker, positioned at Uluru
-                    const marker = new AdvancedMarkerView({
-                        map: map,
-                        position: position,
-                        title: "ETSII",
-                    });
+                        // The marker, positioned at ETSII
+                        const marker = new AdvancedMarkerView({
+                            map: map,
+                            position: position,
+                            title: "ETSII",
+                        });
+
                     }
 
                     initMap();
@@ -71,12 +72,11 @@
                         .then(response => {return response.json()})
                         .then(data => cities.push(...data))
                         .then(showCities)
-                        //.then(showInfo)
 
                     function showCities() {
 
                         const html = cities.map(place => {
-                        return `
+                            return `
                                 <li>
                                     <span class="name">${place.name}</span>
                                 </li>
@@ -85,22 +85,38 @@
 
                         citieslist.innerHTML = html;
 
-                        const city = document.querySelector('.name');
-                        city.addEventListener("click", showInfo("Arrecife"));
-                        console.log(city);
-
+                        const allCitiesList = document.querySelectorAll('.name');
+                        console.log(allCitiesList);
+                        allCitiesList.forEach(cityInTheList => {
+                            cityInTheList.addEventListener('click', showInfo);
+                        });
+                        
                     };
 
-                    function showInfo(cityname) {
+                    function showInfo(e) {
                         
-                        console.log("hello");
-                        console.log(cityname);
+                        const cityToShow = cities.find(cityInArray => cityInArray.name === e.target.textContent);
+                        console.log(cityToShow);
                         citiesinfo.innerHTML = `
                                 <li>
-                                    <span>Esto es una prueba con la ciudad de ${cityname}</span>
+                                    <span>Name: ${cityToShow.name}</span>
+                                </li>
+                                <li>
+                                    <span>Country code: ${cityToShow.country}</span>
+                                </li>
+                                <li>
+                                    <span>Lat: ${cityToShow.lat}</span>
+                                </li>
+                                <li>
+                                    <span>Lng: ${cityToShow.lng}</span>
                                 </li>
                                 `;
-                                
+
+                        const position = { lat: cityToShow.lat, lng: cityToShow.lng };
+
+
+
+                        console.log(position);
                     };      
                     
                     const citieslist = document.querySelector('.cities-list');
