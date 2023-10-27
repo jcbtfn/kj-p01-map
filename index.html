@@ -2,16 +2,17 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>Primer ejercicio</title>
+        <title>Cities exercise</title>
         <link rel="stylesheet" href="css/style.css">
         <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-        <script type="module" src="js/map.js"></script>
     </head>
     <body>
         <main>
     
-            <section>
-                <h3>Cities exercise</h3>
+            <h3>CITIES</h3>
+
+            <section id="map-container">
+                
                 <!--The div element for the map -->
                 <div id="map"></div>
     
@@ -22,27 +23,32 @@
                     // Initialize and add the map
                     let map;
 
-                    async function initMap() {
-                    // The location of Uluru
-                    const position = { lat: 28.482921928694683, lng: -16.322237460149434 };
-                    // Request needed libraries.
-                    //@ts-ignore
-                    const { Map } = await google.maps.importLibrary("maps");
-                    const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
+                    async function initMap(position) {
+                    // The location
+                        //const position = { lat: 28.482921928694683, lng: -16.322237460149434 };
+                        if (position === undefined) {
+                            position = { lat: 28.482921928694683, lng: -16.322237460149434 };
+                        }
+                        //const position = position2;
+                        // Request needed libraries.
+                        //@ts-ignore
+                        const { Map } = await google.maps.importLibrary("maps");
+                        const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
 
-                    // The map, centered at Uluru
-                    map = new Map(document.getElementById("map"), {
-                        zoom: 17,
-                        center: position,
-                        mapId: "DEMO_MAP_ID",
-                    });
+                        // The map, centered at ETSII
+                        map = new Map(document.getElementById("map"), {
+                            zoom: 17,
+                            center: position,
+                            mapId: "DEMO_MAP_ID",
+                        });
 
-                    // The marker, positioned at Uluru
-                    const marker = new AdvancedMarkerView({
-                        map: map,
-                        position: position,
-                        title: "ETSII",
-                    });
+                        // The marker, positioned at ETSII
+                        const marker = new AdvancedMarkerView({
+                            map: map,
+                            position: position,
+                            title: "ETSII",
+                        });
+
                     }
 
                     initMap();
@@ -52,11 +58,69 @@
     
             <section id="textinfo">
                 <div id="cities-list">
-                    <p>Aquí va la lista de ciudades</p>
+                    <ul class="cities-list">Loading cities...</ul>
                 </div>
                 <div id="cities-info">
-                    <p>Aquí el cuadro de información. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tincidunt tortor aliquam nulla facilisi cras. Bibendum at varius vel pharetra vel. Eleifend mi in nulla posuere sollicitudin aliquam ultrices. Quisque non tellus orci ac. Ornare aenean euismod elementum nisi quis eleifend. Nunc sed augue lacus viverra. Consectetur adipiscing elit ut aliquam. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Quam id leo in vitae. Nisi vitae suscipit tellus mauris a diam maecenas. Nibh sit amet commodo nulla facilisi nullam vehicula ipsum. Nam aliquam sem et tortor. Mauris rhoncus aenean vel elit scelerisque mauris. At lectus urna duis convallis. Sit amet est placerat in egestas erat imperdiet sed euismod. Donec ultrices tincidunt arcu non. Amet mattis vulputate enim nulla aliquet porttitor lacus. Vel facilisis volutpat est velit egestas dui id ornare arcu.</p>
+                    <ul class="cities-info">Cities info</ul>
                 </div>
+                <script>
+
+                    const citiesList = document.querySelector('.cities-list');
+                    const endpoint = 'https://gist.githubusercontent.com/jcbtfn/688cb35c398469b682168b5bd2513007/raw/61b087a27d8030ba78fdb615fdff04b42d69ee12/testcities.json';
+                    
+                    const cities = [];
+
+                    fetch(endpoint)
+                        .then(response => {return response.json()})
+                        .then(data => cities.push(...data))
+                        .then(showCities)
+
+                    function showCities() {
+
+                        const html = cities.map(place => {
+                            return `
+                                <li>
+                                    <span class="name">${place.name}</span>
+                                </li>
+                                `;
+                        }).join('');
+
+                        citieslist.innerHTML = html;
+
+                        const allCitiesList = document.querySelectorAll('.name');
+                        allCitiesList.forEach(cityInTheList => {
+                            cityInTheList.addEventListener('click', showInfo);
+                        });
+                        
+                    };
+
+                    function showInfo(e) {
+                        
+                        const cityToShow = cities.find(cityInArray => cityInArray.name === e.target.textContent);
+                        citiesinfo.innerHTML = `
+                                <li>
+                                    <span><b>Name:</b> ${cityToShow.name}</span>
+                                </li>
+                                <li>
+                                    <span><b>Country code:</b> ${cityToShow.country}</span>
+                                </li>
+                                <li>
+                                    <span><b>Lat:</b> ${cityToShow.lat}</span>
+                                </li>
+                                <li>
+                                    <span><b>Lng:</b> ${cityToShow.lng}</span>
+                                </li>
+                                `;
+
+                        const position = new google.maps.LatLng(cityToShow.lat, cityToShow.lng);
+                        initMap(position);
+
+                    };      
+                    
+                    const citieslist = document.querySelector('.cities-list');
+                    const citiesinfo = document.querySelector('.cities-info');
+
+                </script>
             </section>
     
         </main>
