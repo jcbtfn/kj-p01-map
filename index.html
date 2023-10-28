@@ -5,6 +5,7 @@
         <title>Cities exercise</title>
         <link rel="stylesheet" href="css/style.css">
         <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+        <script src="js/map.js"></script>
     </head>
     <body>
         <main>
@@ -12,48 +13,8 @@
             <h3>CITIES</h3>
 
             <section id="map-container">
-                
                 <!--The div element for the map -->
                 <div id="map"></div>
-    
-                <!-- prettier-ignore -->
-                <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-                    ({key: "AIzaSyBCI9_XT99gdSDgCctcuPFJKCBLi8EPdMM", v: "beta"});
-                
-                    // Initialize and add the map
-                    let map;
-
-                    async function initMap(position) {
-                    // The location
-                        //const position = { lat: 28.482921928694683, lng: -16.322237460149434 };
-                        if (position === undefined) {
-                            position = { lat: 28.482921928694683, lng: -16.322237460149434 };
-                        }
-                        //const position = position2;
-                        // Request needed libraries.
-                        //@ts-ignore
-                        const { Map } = await google.maps.importLibrary("maps");
-                        const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
-
-                        // The map, centered at ETSII
-                        map = new Map(document.getElementById("map"), {
-                            zoom: 17,
-                            center: position,
-                            mapId: "DEMO_MAP_ID",
-                        });
-
-                        // The marker, positioned at ETSII
-                        const marker = new AdvancedMarkerView({
-                            map: map,
-                            position: position,
-                            title: "ETSII",
-                        });
-
-                    }
-
-                    initMap();
-                
-                </script>
             </section>
     
             <section id="textinfo">
@@ -63,66 +24,9 @@
                 <div id="cities-info">
                     <ul class="cities-info">Cities info</ul>
                 </div>
-                <script>
-
-                    const citiesList = document.querySelector('.cities-list');
-                    const endpoint = 'https://gist.githubusercontent.com/jcbtfn/688cb35c398469b682168b5bd2513007/raw/61b087a27d8030ba78fdb615fdff04b42d69ee12/testcities.json';
-                    
-                    const cities = [];
-
-                    fetch(endpoint)
-                        .then(response => {return response.json()})
-                        .then(data => cities.push(...data))
-                        .then(showCities)
-
-                    function showCities() {
-
-                        const html = cities.map(place => {
-                            return `
-                                <li>
-                                    <span class="name">${place.name}</span>
-                                </li>
-                                `;
-                        }).join('');
-
-                        citieslist.innerHTML = html;
-
-                        const allCitiesList = document.querySelectorAll('.name');
-                        allCitiesList.forEach(cityInTheList => {
-                            cityInTheList.addEventListener('click', showInfo);
-                        });
-                        
-                    };
-
-                    function showInfo(e) {
-                        
-                        const cityToShow = cities.find(cityInArray => cityInArray.name === e.target.textContent);
-                        citiesinfo.innerHTML = `
-                                <li>
-                                    <span><b>Name:</b> ${cityToShow.name}</span>
-                                </li>
-                                <li>
-                                    <span><b>Country code:</b> ${cityToShow.country}</span>
-                                </li>
-                                <li>
-                                    <span><b>Lat:</b> ${cityToShow.lat}</span>
-                                </li>
-                                <li>
-                                    <span><b>Lng:</b> ${cityToShow.lng}</span>
-                                </li>
-                                `;
-
-                        const position = new google.maps.LatLng(cityToShow.lat, cityToShow.lng);
-                        initMap(position);
-
-                    };      
-                    
-                    const citieslist = document.querySelector('.cities-list');
-                    const citiesinfo = document.querySelector('.cities-info');
-
-                </script>
             </section>
     
         </main>
     </body>
+    <script src="js/showCitiesAndInfo.js"></script>
 </html>
