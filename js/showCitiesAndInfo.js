@@ -18,7 +18,7 @@ function showCities() {
                 `;
     }).join('');
 
-    citieslist.innerHTML = html;
+    citiesList.innerHTML = html;
 
     const allCitiesList = document.querySelectorAll('.name');
     allCitiesList.forEach(cityInTheList => {
@@ -26,6 +26,8 @@ function showCities() {
     });
 
 };
+
+const citiesinfo = document.querySelector('.cities-info');
 
 function showInfo(e) {
 
@@ -49,6 +51,3 @@ function showInfo(e) {
     initMap(position);
 
 };
-
-const citieslist = document.querySelector('.cities-list');
-const citiesinfo = document.querySelector('.cities-info');
