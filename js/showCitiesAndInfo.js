@@ -4,7 +4,7 @@ const endpoint = 'https://gist.githubusercontent.com/jcbtfn/688cb35c398469b68216
 const cities = [];
 
 fetch(endpoint)
-    .then(response => { return response.json() })
+    .then(response => response.json())
     .then(data => cities.push(...data))
     .then(showCities)
 
